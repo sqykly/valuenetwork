@@ -56,7 +56,7 @@
                             id="sale{{ order.id }}" 
                             action="{% url exchange_logging exchange_id=order.sale.id %}" 
                             method="GET" >
-                            <button style="display: inline;"  class="btn btn-info" title="Sale for this order" >Go to Sale</button>
+                            <button style="display: inline;"  class="btn btn-info" title="Sale for this order" >Go to Exchange</button>
                         </form>
                         {% if order.description %}
                             <p>{{ order.description|urlize|linebreaks }}</p>
