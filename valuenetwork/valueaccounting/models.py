@@ -1847,10 +1847,12 @@ class EconomicResourceType(models.Model):
         return answer
         
     def can_be_parent(self):
-        if self.own_recipes():
+        #if self.own_recipes():
             #if self.recipe_is_staged():
-            return True
-        return False
+        #    return True
+        #return False
+        #temp hack for Pavlik
+        return True
 
     def generate_staged_work_order(self, order_name, start_date, user):
         #pr changed
