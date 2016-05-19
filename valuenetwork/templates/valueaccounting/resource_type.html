@@ -159,7 +159,7 @@ container li {
         {% with resource_type.parent as parent %}
             {% if parent %}
                 <div class="parent" >
-                    {% trans "Parent" %}: {{ parent.name }} 
+                    {% trans "Parent" %}: <span class="name"><a href="{% url resource_type resource_type_id=parent.id %}">{{ parent.name }}</a></span>
                     {% if parent.own_recipes %}
                         &nbsp;&nbsp;
                         {% if parent.recipe_is_staged %}
