@@ -11625,6 +11625,10 @@ class CachedEventSummary(models.Model):
                 event.context_agent=context_agent
                 event.save()
             try:
+                if not event.context_agent:
+                    continue
+                if not event.from_agent:
+                    continue
                 key = "-".join([
                     str(event.from_agent.id), 
                     str(event.context_agent.id), 
@@ -11640,7 +11644,8 @@ class CachedEventSummary(models.Model):
                         Decimal('0.0'))
                 summaries[key].quantity += event.quantity
             except AttributeError:
-                msg = " ".join(["invalid summary key:", key])
+                #import pdb; pdb.set_trace()
+                msg = " ".join(["invalid summary key for event:", str(event.id) ])
                 assert False, msg
         summaries = summaries.values()
         for summary in summaries:
