@@ -127,8 +127,8 @@ class EconomicEventViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         """
-        Optionally restricts the returned purchases to a given user,
-        by filtering against a `username` query parameter in the URL.
+        Optionally restricts the returned events to a given context_agent,
+        by filtering against a `context` query parameter in the URL.
         """
         queryset = EconomicEvent.objects.all()
         context_slug = self.request.QUERY_PARAMS.get('context', None)

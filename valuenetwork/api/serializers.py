@@ -107,6 +107,10 @@ class AgentTypeSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('api_url', 'name', 'party_type', )
         
 class EconomicEventSerializer(serializers.HyperlinkedModelSerializer):
+    api_url = serializers.HyperlinkedIdentityField(
+        view_name='economicevent-detail',
+        lookup_field='pk'
+    )
     unit_of_quantity = serializers.RelatedField()
     class Meta:
         model = EconomicEvent
@@ -172,3 +176,4 @@ class UnitSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Unit
         fields = ('api_url', 'unit_type', 'name', )
+        
