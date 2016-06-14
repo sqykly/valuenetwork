@@ -102,6 +102,10 @@ class ContextSerializer(serializers.HyperlinkedModelSerializer):
         
         
 class AgentTypeSerializer(serializers.HyperlinkedModelSerializer):
+    api_url = serializers.HyperlinkedIdentityField(
+        view_name='agenttype-detail',
+        lookup_field='pk'
+    )
     class Meta:
         model = AgentType
         fields = ('api_url', 'name', 'party_type', )
@@ -131,6 +135,10 @@ class EconomicEventSerializer(serializers.HyperlinkedModelSerializer):
             )
         
 class ContributionSerializer(serializers.HyperlinkedModelSerializer):
+    api_url = serializers.HyperlinkedIdentityField(
+        view_name='economicevent-detail',
+        lookup_field='pk'
+    )
     unit_of_quantity = serializers.RelatedField()
     class Meta:
         model = EconomicEvent
@@ -152,16 +160,28 @@ class ContributionSerializer(serializers.HyperlinkedModelSerializer):
 
         
 class EventTypeSerializer(serializers.HyperlinkedModelSerializer):
+    api_url = serializers.HyperlinkedIdentityField(
+        view_name='eventtype-detail',
+        lookup_field='pk'
+    )
     class Meta:
         model = EventType
         fields = ('api_url', 'name', 'relationship', 'related_to', 'resource_effect',)
         
-class ResourceTypeSerializer(serializers.HyperlinkedModelSerializer):
+class EconomicResourceTypeSerializer(serializers.HyperlinkedModelSerializer):
+    api_url = serializers.HyperlinkedIdentityField(
+        view_name='economicresourcetype-detail',
+        lookup_field='pk'
+    )
     class Meta:
         model = EconomicResourceType
         fields = ('api_url', 'name', )
         
 class EconomicResourceSerializer(serializers.HyperlinkedModelSerializer):
+    api_url = serializers.HyperlinkedIdentityField(
+        view_name='economicresource-detail',
+        lookup_field='pk'
+    )
     unit_of_quantity = serializers.Field(source='unit_of_quantity')
     class Meta:
         model = EconomicResource
@@ -173,6 +193,10 @@ class EconomicResourceSerializer(serializers.HyperlinkedModelSerializer):
             'unit_of_quantity',)
 
 class UnitSerializer(serializers.HyperlinkedModelSerializer):
+    api_url = serializers.HyperlinkedIdentityField(
+        view_name='unit-detail',
+        lookup_field='pk'
+    )
     class Meta:
         model = Unit
         fields = ('api_url', 'unit_type', 'name', )

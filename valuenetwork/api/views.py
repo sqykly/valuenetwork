@@ -177,12 +177,12 @@ class EventTypeViewSet(viewsets.ModelViewSet):
     serializer_class = EventTypeSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
-class ResourceTypeViewSet(viewsets.ModelViewSet):
+class EconomicResourceTypeViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Agent Types to be viewed or edited.
     """
     queryset = EconomicResourceType.objects.all()
-    serializer_class = ResourceTypeSerializer
+    serializer_class = EconomicResourceTypeSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     
 class EconomicResourceViewSet(viewsets.ModelViewSet):
