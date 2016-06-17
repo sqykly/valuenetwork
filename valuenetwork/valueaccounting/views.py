@@ -10442,7 +10442,7 @@ def internal_exchanges(request, agent_id=None):
                         agid = int(value[1:])
                         selected_agents.append(EconomicAgent.objects.get(id=agid))
                     else:
-                        selected_categories.append(value)
+                        selected_categories.append(value[1:])
                 if selected_categories:
                     for ex in exchanges:
                         if str(ex.exchange_type.id) in selected_categories:
