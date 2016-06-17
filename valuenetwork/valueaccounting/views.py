@@ -1097,6 +1097,7 @@ def resource_flow_report(request, resource_type_id):
     #import pdb; pdb.set_trace() 
     stages.append(ExchangeType.objects.get(id=3))
     stages.append(ExchangeType.objects.get(id=2))
+    stages.append(ExchangeType.objects.get(id=5))
     stages.append(ProcessType.objects.get(id=4))
     stages.append(ExchangeType.objects.get(id=1))
     stages.append(ProcessType.objects.get(id=5))

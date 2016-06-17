@@ -127,8 +127,8 @@ class EconomicEventViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         """
-        Optionally restricts the returned purchases to a given user,
-        by filtering against a `username` query parameter in the URL.
+        Optionally restricts the returned events to a given context_agent,
+        by filtering against a `context` query parameter in the URL.
         """
         queryset = EconomicEvent.objects.all()
         context_slug = self.request.QUERY_PARAMS.get('context', None)
@@ -177,12 +177,12 @@ class EventTypeViewSet(viewsets.ModelViewSet):
     serializer_class = EventTypeSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
-class ResourceTypeViewSet(viewsets.ModelViewSet):
+class EconomicResourceTypeViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Agent Types to be viewed or edited.
     """
     queryset = EconomicResourceType.objects.all()
-    serializer_class = ResourceTypeSerializer
+    serializer_class = EconomicResourceTypeSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     
 class EconomicResourceViewSet(viewsets.ModelViewSet):
