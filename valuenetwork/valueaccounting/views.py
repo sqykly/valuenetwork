@@ -10409,6 +10409,7 @@ def internal_exchanges(request, agent_id=None):
     event_ids = ""
     select_all = True
     selected_values = "all"
+    agents = []
     if request.method == "POST":
         #import pdb; pdb.set_trace()
         dt_selection_form = DateSelectionForm(data=request.POST)
@@ -10433,10 +10434,29 @@ def internal_exchanges(request, agent_id=None):
                 transfers_included = []
                 exchanges_included = []
                 events_included = []
-                for ex in exchanges:
-                    if str(ex.exchange_type.id) in vals:
-                        exchanges_included.append(ex)
-                exchanges = exchanges_included
+                selected_agents = []
+                selected_categories = []
+                for value in vals:
+                    if value[:1] == "A":
+                        agid = int(value[1:])
+                        selected_agents.append(EconomicAgent.objects.get(id=agid))
+                    else:
+                        selected_categories.append(value)
+                if selected_categories:
+                    for ex in exchanges:
+                        if str(ex.exchange_type.id) in selected_categories:
+                            exchanges_included.append(ex)
+                    exchanges = exchanges_included
+                    exchanges_included = []
+                #import pdb; pdb.set_trace()
+                if selected_agents:
+                    for ex in exchanges:
+                        exchange_agents = ex.involves_agents()
+                        for ea in exchange_agents:
+                            if ea in selected_agents:
+                                exchanges_included.append(ex)
+                    exchanges = exchanges_included
+                
     else:
         if agent_id:
             exchanges = Exchange.objects.internal_exchanges(start, end).filter(context_agent=agent)
@@ -10460,11 +10480,20 @@ def internal_exchanges(request, agent_id=None):
             for event in transfer.events.all():
                 event_ids = event_ids + comma + str(event.id)
                 comma = ","
+                if event.from_agent not in agents:
+                    agents.append(event.from_agent)
+                if event.to_agent not in agents:
+                    agents.append(event.to_agent)
         #import pdb; pdb.set_trace()
         for event in x.events.all():
             event_ids = event_ids + comma + str(event.id)
             comma = ","
+            if event.from_agent not in agents:
+                agents.append(event.from_agent)
+            if event.to_agent not in agents:
+                agents.append(event.to_agent)
         #todo: get sort to work
+        
 
     #import pdb; pdb.set_trace()
 
@@ -10479,6 +10508,7 @@ def internal_exchanges(request, agent_id=None):
         "ets": ets,
         "event_ids": event_ids,
         "agent": agent,
+        "agents": agents,
     }, context_instance=RequestContext(request))
 
 #obsolete    

@@ -114,6 +114,10 @@
                 {% for et in ets %}
                     <p><input type="checkbox" class="category" id="{{ et.id }}" name="{{ et.id }}" value="{{ et.id }}" /> {{ et.name }}</p>
                 {% endfor %}
+                <p class="title"> {% trans "Agent Involved" %} </p> 
+                {% for agent in agents %}
+                    <p><input type="checkbox" class="category" id="A{{ agent.id }}" name="A{{ agent.id }}" value="A{{ agent.id }}" /> {{ agent.name }}</p>
+                {% endfor %}
 {% comment %}
                 {% if references %}
 	            <p class="title"> {% trans "Accounting Reference" %} </p>

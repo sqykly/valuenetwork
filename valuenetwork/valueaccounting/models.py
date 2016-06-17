@@ -7026,13 +7026,30 @@ class Exchange(models.Model):
     #    return self.events.filter(
     #        event_type__relationship='shipment')
 
+    #todo: does this work? look for usage and change to the one after.
     def events(self):
         events = []
         for transfer in self.transfers.all():
             for event in transfer.events.all():
                 events.append(event)
-        return events        
-                        
+        return events  
+    
+    def xfer_events(self):
+        events = []
+        for transfer in self.transfers.all():
+            for event in transfer.events.all():
+                events.append(event)
+        return events   
+    
+    def involves_agents(self):
+        agents = []
+        for event in self.xfer_events():
+            if event.from_agent not in agents:
+                agents.append(event.from_agent)
+            if event.to_agent not in agents:
+                agents.append(event.to_agent)
+        return agents
+        
     def transfer_events(self):
         #todo exchange redesign fallout?
         #obsolete? or just used wrong?
