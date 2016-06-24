@@ -6,16 +6,19 @@
 {% block body_base %}
     <div class="container">
         {% include "_messages.html" %}
-       
+
         <div class="hero-unit well">
             {% block banner %}
             {% endblock %}
         </div>
 
         <div class="row-fluid">
-	        <div class="span4">
+	        <div class="span3">
+	            {% include "_projects_panel.html" %}
+	        </div>
+	        <div class="span3">
 	            {% block column-1 %}
-	            
+
                     {% if layout %}
                         {% if layout.use_work_panel %}
                             {% include "_work_panel.html" %}
@@ -25,12 +28,12 @@
                     {% else %}
                         <p>Panel 1</p>
                     {% endif %}
-                    
+
                 {% endblock %}
 	        </div>
-	        <div class="span4">
+	        <div class="span3">
 	            {% block column-2 %}
-	            
+
                     {% if layout %}
                         {% if layout.use_needs_panel %}
                             {% include "_needs_panel.html" %}
@@ -40,13 +43,13 @@
                     {% else %}
                         <p>Panel 2</p>
                     {% endif %}
-                    
-					
+
+
                 {% endblock %}
 	        </div>
-	        <div class="span4">
+	        <div class="span3">
 	            {% block column-3 %}
-	            
+
                     {% if layout %}
                         {% if layout.use_creations_panel %}
                             {% include "_creations_panel.html" %}
@@ -56,11 +59,11 @@
                     {% else %}
                         <p>Panel 3</p>
                     {% endif %}
-                    
-                    
+
+
                 {% endblock %}
 	        </div>
         </div>
-        
+
     </div>
 {% endblock %}

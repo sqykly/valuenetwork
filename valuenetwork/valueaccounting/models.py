@@ -429,17 +429,31 @@ class EconomicAgent(models.Model):
         related_name='agents_changed', blank=True, null=True, editable=False)
     changed_date = models.DateField(auto_now=True, blank=True, null=True, editable=False)
     objects = AgentManager()
-    
+
     class Meta:
         ordering = ('nick',)
-    
+
+    @classmethod
+    def __project_ids_on(cls, work_events):
+        project_ids = []
+        for work_event in work_events:
+            if work_event.context_agent:
+                project_ids.append(work_event.context_agent.id)
+        return project_ids
+
+    @classmethod
+    def active_projects(cls, days_ago=180):
+        work_events = EconomicEvent.work_events_since(days_ago=days_ago)
+        active_project_ids = cls.__project_ids_on(work_events)
+        return EconomicAgent.objects.context_agents().filter(id__in=active_project_ids).order_by("name")
+
     def __unicode__(self):
         return self.nick
-    
+
     def save(self, *args, **kwargs):
         unique_slugify(self, self.nick)
         super(EconomicAgent, self).save(*args, **kwargs)
-        
+
     def delete(self, *args, **kwargs):
         aus = self.users.all()
         if aus:
@@ -9895,7 +9909,16 @@ class EconomicEvent(models.Model):
             quantity_string,
             resource_string,
         ])
-   
+
+    @classmethod
+    def work_events_since(cls, days_ago=180):
+        end = datetime.date.today()
+        start = end - datetime.timedelta(days=days_ago)
+
+        return cls.objects.filter(
+            event_type__relationship="work",
+            event_date__range=(start, end))
+
     def undistributed_description(self):
         if self.unit_of_quantity:
             quantity_string = " ".join([str(self.undistributed_amount()), self.unit_of_quantity.abbrev])
