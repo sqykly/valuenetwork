@@ -85,11 +85,14 @@ def home(request):
     return render_to_response("homepage.html",
         template_params,
         context_instance=RequestContext(request))
-    
+
 def work_to_do(template_params):
+    six_months_ago = datetime.datetime.now() - datetime.timedelta(weeks=26)
     template_params["work_to_do"] = Commitment.objects.unfinished().filter(
-        from_agent=None, 
-        event_type__relationship="work")
+        from_agent=None,
+        event_type__relationship="work",
+        changed_date__gte=six_months_ago).order_by("-changed_date")
+
     return template_params
 
 @login_required
