@@ -7211,6 +7211,7 @@ class Exchange(models.Model):
                 values += value * trigger_fraction
                 evt.depth = depth
                 path.append(evt)
+                #import pdb; pdb.set_trace()
                 if evt.resource:
                     contributions = evt.resource.cash_contribution_events()
                     depth += 1
@@ -7222,15 +7223,17 @@ class Exchange(models.Model):
                 #total = sum(p.quantity for p in payments)
                 for evt in payments:
                     #fraction = evt.quantity / total
+                    evt.share = evt.quantity * trigger_fraction
+                    evt.depth = depth
+                    path.append(evt)
+                    values += evt.share
                     depth += 1
                     if evt.resource:
+                        #import pdb; pdb.set_trace()
                         contributions = evt.resource.cash_contribution_events()
                         #evt.share = evt.quantity * share * fraction * trigger_fraction
                         #evt.share = evt.quantity * fraction * trigger_fraction
-                        evt.share = evt.quantity * trigger_fraction
-                        evt.depth = depth
-                        path.append(evt)
-                        values += evt.share
+                        
                         #todo 3d: do multiple payments make sense for cash contributions?
                         depth += 1
                         for c in contributions:
@@ -7255,15 +7258,18 @@ class Exchange(models.Model):
             for ex in expenses:
                 ex.depth = depth
                 path.append(ex)
-                value = ex.value
-                values += value * trigger_fraction
+                #value = ex.value
+                #values += value * trigger_fraction
                 exp_payments = [evt for evt in self.payment_events() if evt.to_agent==ex.from_agent]
                 #exp_payments = self.payment_events().filter(to_agent=ex.from_agent)
                 for exp in exp_payments:
-                    depth += 1
-                    exp.depth = depth
-                    path.append(exp)
-                    depth -= 1
+                    if exp not in payments:
+                        depth += 1
+                        exp.depth = depth
+                        path.append(exp)
+                        value = exp.quantity
+                        values += value * trigger_fraction
+                        depth -= 1
                 depth -= 1
                         
             for evt in self.work_events():
