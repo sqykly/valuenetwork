@@ -6983,9 +6983,9 @@ class Exchange(models.Model):
     #    return ccs
         
     #obsolete        
-    #def payment_sources_with_contributions(self):
-    #    resources = {p.resource for p in self.payment_events() if p.resource}
-    #    return [r for r in resources if r.cash_contribution_events()]
+    def payment_sources_with_contributions(self):
+        resources = {p.resource for p in self.payment_events() if p.resource}
+        return [r for r in resources if r.cash_contribution_events()]
         
     #obsolete
     #def uncommitted_payment_events(self):
@@ -7231,6 +7231,11 @@ class Exchange(models.Model):
                         path.append(evt)
                         values += evt.share
                         #todo 3d: do multiple payments make sense for cash contributions?
+                        depth += 1
+                        for c in contributions:
+                            c.depth = depth
+                            path.append(c)
+                        depth -= 1
                     else:
                         value = evt.quantity
                         br = evt.bucket_rule(value_equation)
