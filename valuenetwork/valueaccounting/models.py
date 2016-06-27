@@ -7219,14 +7219,15 @@ class Exchange(models.Model):
                         c.depth = depth
                         path.append(c)
             elif len(payments) > 1:
-                total = sum(p.quantity for p in payments)
+                #total = sum(p.quantity for p in payments)
                 for evt in payments:
-                    fraction = evt.quantity / total
-                    #depth += 1
+                    #fraction = evt.quantity / total
+                    depth += 1
                     if evt.resource:
                         contributions = evt.resource.cash_contribution_events()
                         #evt.share = evt.quantity * share * fraction * trigger_fraction
-                        evt.share = evt.quantity * fraction * trigger_fraction
+                        #evt.share = evt.quantity * fraction * trigger_fraction
+                        evt.share = evt.quantity * trigger_fraction
                         evt.depth = depth
                         path.append(evt)
                         values += evt.share
@@ -7242,10 +7243,12 @@ class Exchange(models.Model):
                         if br:
                             #import pdb; pdb.set_trace()
                             value = br.compute_claim_value(evt)
-                        evt.share = value * fraction * trigger_fraction
+                        #evt.share = value * fraction * trigger_fraction
+                        evt.share = evt.quantity * trigger_fraction
                         evt.depth = depth
                         path.append(evt)
                         values += evt.share
+                    depth -= 1
             #todo exchange redesign fallout
             #import pdb; pdb.set_trace()
             expenses = self.expense_events()
