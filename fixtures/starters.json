@@ -1,213 +1,35 @@
 [
     {
-        "pk": 9,
-        "model": "valueaccounting.processpattern",
+        "pk": 3,
+        "model": "valueaccounting.agenttype",
         "fields": {
-            "name": "Cash Contribution"
-        }
-    },
-    {
-        "pk": 13,
-        "model": "valueaccounting.processpattern",
-        "fields": {
-            "name": "Change"
-        }
-    },
-    {
-        "pk": 12,
-        "model": "valueaccounting.processpattern",
-        "fields": {
-            "name": "Create Changeable"
-        }
-    },
-    {
-        "pk": 1,
-        "model": "valueaccounting.processpattern",
-        "fields": {
-            "name": "Customer order"
-        }
-    },
-    {
-        "pk": 16,
-        "model": "valueaccounting.processpattern",
-        "fields": {
-            "name": "Distribution"
-        }
-    },
-    {
-        "pk": 8,
-        "model": "valueaccounting.processpattern",
-        "fields": {
-            "name": "Expense Contribution"
-        }
-    },
-    {
-        "pk": 6,
-        "model": "valueaccounting.processpattern",
-        "fields": {
-            "name": "Material Contribution"
+            "party_type": "network",
+            "is_context": true,
+            "name": "Group",
+            "parent": null,
+            "description": ""
         }
     },
     {
         "pk": 2,
-        "model": "valueaccounting.processpattern",
+        "model": "valueaccounting.agenttype",
         "fields": {
-            "name": "Non-production"
-        }
-    },
-    {
-        "pk": 3,
-        "model": "valueaccounting.processpattern",
-        "fields": {
-            "name": "Production Logging"
-        }
-    },
-    {
-        "pk": 7,
-        "model": "valueaccounting.processpattern",
-        "fields": {
-            "name": "Purchase Contribution"
-        }
-    },
-    {
-        "pk": 10,
-        "model": "valueaccounting.processpattern",
-        "fields": {
-            "name": "Purchase Order"
-        }
-    },
-    {
-        "pk": 15,
-        "model": "valueaccounting.processpattern",
-        "fields": {
-            "name": "Sale"
-        }
-    },
-    {
-        "pk": 5,
-        "model": "valueaccounting.processpattern",
-        "fields": {
-            "name": "Todo"
+            "party_type": "org",
+            "is_context": false,
+            "name": "Organization",
+            "parent": null,
+            "description": null
         }
     },
     {
         "pk": 1,
-        "model": "valueaccounting.patternusecase",
+        "model": "valueaccounting.agenttype",
         "fields": {
-            "use_case": [
-                "cash_contr"
-            ],
-            "pattern": 9
-        }
-    },
-    {
-        "pk": 2,
-        "model": "valueaccounting.patternusecase",
-        "fields": {
-            "use_case": [
-                "non_prod"
-            ],
-            "pattern": 2
-        }
-    },
-    {
-        "pk": 3,
-        "model": "valueaccounting.patternusecase",
-        "fields": {
-            "use_case": [
-                "rand"
-            ],
-            "pattern": 3
-        }
-    },
-    {
-        "pk": 4,
-        "model": "valueaccounting.patternusecase",
-        "fields": {
-            "use_case": [
-                "recipe"
-            ],
-            "pattern": 12
-        }
-    },
-    {
-        "pk": 5,
-        "model": "valueaccounting.patternusecase",
-        "fields": {
-            "use_case": [
-                "recipe"
-            ],
-            "pattern": 13
-        }
-    },
-    {
-        "pk": 6,
-        "model": "valueaccounting.patternusecase",
-        "fields": {
-            "use_case": [
-                "todo"
-            ],
-            "pattern": 5
-        }
-    },
-    {
-        "pk": 7,
-        "model": "valueaccounting.patternusecase",
-        "fields": {
-            "use_case": [
-                "cust_orders"
-            ],
-            "pattern": 1
-        }
-    },
-    {
-        "pk": 8,
-        "model": "valueaccounting.patternusecase",
-        "fields": {
-            "use_case": [
-                "res_contr"
-            ],
-            "pattern": 6
-        }
-    },
-    {
-        "pk": 9,
-        "model": "valueaccounting.patternusecase",
-        "fields": {
-            "use_case": [
-                "purch_contr"
-            ],
-            "pattern": 7
-        }
-    },
-    {
-        "pk": 10,
-        "model": "valueaccounting.patternusecase",
-        "fields": {
-            "use_case": [
-                "exp_contr"
-            ],
-            "pattern": 8
-        }
-    },
-    {
-        "pk": 11,
-        "model": "valueaccounting.patternusecase",
-        "fields": {
-            "use_case": [
-                "sale"
-            ],
-            "pattern": 15
-        }
-    },
-    {
-        "pk": 12,
-        "model": "valueaccounting.patternusecase",
-        "fields": {
-            "use_case": [
-                "distribution"
-            ],
-            "pattern": 16
+            "party_type": "individual",
+            "is_context": false,
+            "name": "Person",
+            "parent": null,
+            "description": ""
         }
     },
     {
@@ -215,11 +37,20 @@
         "model": "valueaccounting.facet",
         "fields": {
             "name": "Category",
-            "description": "This is a set of default facet values.  You can set up as many Facets and Facet Values as needed to categorize and filter your Resource Types."
+            "description": ""
         }
     },
     {
         "pk": 4,
+        "model": "valueaccounting.facetvalue",
+        "fields": {
+            "facet": 1,
+            "description": "",
+            "value": "Equipment or Tools"
+        }
+    },
+    {
+        "pk": 3,
         "model": "valueaccounting.facetvalue",
         "fields": {
             "facet": 1,
@@ -228,194 +59,122 @@
         }
     },
     {
+        "pk": 2,
+        "model": "valueaccounting.facetvalue",
+        "fields": {
+            "facet": 1,
+            "description": "",
+            "value": "Products or Services"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "valueaccounting.facetvalue",
+        "fields": {
+            "facet": 1,
+            "description": "",
+            "value": "Space"
+        }
+    },
+    {
         "pk": 1,
         "model": "valueaccounting.facetvalue",
         "fields": {
             "facet": 1,
             "description": "",
-            "value": "Product or Service"
+            "value": "Work"
+        }
+    },
+    {
+        "pk": 7,
+        "model": "valueaccounting.processpattern",
+        "fields": {
+            "name": "Customer order"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "valueaccounting.processpattern",
+        "fields": {
+            "name": "Distribution"
         }
     },
     {
         "pk": 2,
-        "model": "valueaccounting.facetvalue",
+        "model": "valueaccounting.processpattern",
         "fields": {
-            "facet": 1,
-            "description": "",
-            "value": "Work - Administrative"
+            "name": "Manufacturing / Assembly"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "valueaccounting.processpattern",
+        "fields": {
+            "name": "Non-production logging"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "valueaccounting.processpattern",
+        "fields": {
+            "name": "Payout"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "valueaccounting.processpattern",
+        "fields": {
+            "name": "Todo"
         }
     },
     {
         "pk": 3,
-        "model": "valueaccounting.facetvalue",
+        "model": "valueaccounting.processpattern",
         "fields": {
-            "facet": 1,
-            "description": "",
-            "value": "Work - Product or Service"
-        }
-    },
-    {
-        "pk": 22,
-        "model": "valueaccounting.patternfacetvalue",
-        "fields": {
-            "facet_value": 4,
-            "pattern": 9,
-            "event_type": [
-                "Cash Contribution"
-            ]
-        }
-    },
-    {
-        "pk": 23,
-        "model": "valueaccounting.patternfacetvalue",
-        "fields": {
-            "facet_value": 2,
-            "pattern": 9,
-            "event_type": [
-                "Time Contribution"
-            ]
-        }
-    },
-    {
-        "pk": 27,
-        "model": "valueaccounting.patternfacetvalue",
-        "fields": {
-            "facet_value": 1,
-            "pattern": 13,
-            "event_type": [
-                "Change"
-            ]
-        }
-    },
-    {
-        "pk": 28,
-        "model": "valueaccounting.patternfacetvalue",
-        "fields": {
-            "facet_value": 3,
-            "pattern": 13,
-            "event_type": [
-                "Time Contribution"
-            ]
-        }
-    },
-    {
-        "pk": 26,
-        "model": "valueaccounting.patternfacetvalue",
-        "fields": {
-            "facet_value": 1,
-            "pattern": 12,
-            "event_type": [
-                "Create Changeable"
-            ]
-        }
-    },
-    {
-        "pk": 29,
-        "model": "valueaccounting.patternfacetvalue",
-        "fields": {
-            "facet_value": 3,
-            "pattern": 12,
-            "event_type": [
-                "Time Contribution"
-            ]
-        }
-    },
-    {
-        "pk": 2,
-        "model": "valueaccounting.patternfacetvalue",
-        "fields": {
-            "facet_value": 1,
-            "pattern": 1,
-            "event_type": [
-                "Sale"
-            ]
-        }
-    },
-    {
-        "pk": 12,
-        "model": "valueaccounting.patternfacetvalue",
-        "fields": {
-            "facet_value": 1,
-            "pattern": 1,
-            "event_type": [
-                "Shipment"
-            ]
-        }
-    },
-    {
-        "pk": 33,
-        "model": "valueaccounting.patternfacetvalue",
-        "fields": {
-            "facet_value": 4,
-            "pattern": 16,
-            "event_type": [
-                "Distribution"
-            ]
-        }
-    },
-    {
-        "pk": 34,
-        "model": "valueaccounting.patternfacetvalue",
-        "fields": {
-            "facet_value": 2,
-            "pattern": 16,
-            "event_type": [
-                "Time Contribution"
-            ]
-        }
-    },
-    {
-        "pk": 19,
-        "model": "valueaccounting.patternfacetvalue",
-        "fields": {
-            "facet_value": 1,
-            "pattern": 8,
-            "event_type": [
-                "Expense"
-            ]
-        }
-    },
-    {
-        "pk": 20,
-        "model": "valueaccounting.patternfacetvalue",
-        "fields": {
-            "facet_value": 4,
-            "pattern": 8,
-            "event_type": [
-                "Payment"
-            ]
-        }
-    },
-    {
-        "pk": 21,
-        "model": "valueaccounting.patternfacetvalue",
-        "fields": {
-            "facet_value": 2,
-            "pattern": 8,
-            "event_type": [
-                "Time Contribution"
-            ]
-        }
-    },
-    {
-        "pk": 13,
-        "model": "valueaccounting.patternfacetvalue",
-        "fields": {
-            "facet_value": 1,
-            "pattern": 6,
-            "event_type": [
-                "Resource Contribution"
-            ]
+            "name": "Workflow"
         }
     },
     {
         "pk": 14,
         "model": "valueaccounting.patternfacetvalue",
         "fields": {
-            "facet_value": 2,
-            "pattern": 6,
+            "facet_value": 3,
+            "pattern": 5,
+            "event_type": [
+                "Cash Disbursement"
+            ]
+        }
+    },
+    {
+        "pk": 15,
+        "model": "valueaccounting.patternfacetvalue",
+        "fields": {
+            "facet_value": 3,
+            "pattern": 5,
+            "event_type": [
+                "Distribution"
+            ]
+        }
+    },
+    {
+        "pk": 16,
+        "model": "valueaccounting.patternfacetvalue",
+        "fields": {
+            "facet_value": 1,
+            "pattern": 5,
             "event_type": [
                 "Time Contribution"
+            ]
+        }
+    },
+    {
+        "pk": 2,
+        "model": "valueaccounting.patternfacetvalue",
+        "fields": {
+            "facet_value": 2,
+            "pattern": 2,
+            "event_type": [
+                "Citation"
             ]
         }
     },
@@ -426,40 +185,7 @@
             "facet_value": 2,
             "pattern": 2,
             "event_type": [
-                "Time Contribution"
-            ]
-        }
-    },
-    {
-        "pk": 10,
-        "model": "valueaccounting.patternfacetvalue",
-        "fields": {
-            "facet_value": 1,
-            "pattern": 3,
-            "event_type": [
-                "Citation"
-            ]
-        }
-    },
-    {
-        "pk": 11,
-        "model": "valueaccounting.patternfacetvalue",
-        "fields": {
-            "facet_value": 1,
-            "pattern": 3,
-            "event_type": [
                 "Resource Consumption"
-            ]
-        }
-    },
-    {
-        "pk": 7,
-        "model": "valueaccounting.patternfacetvalue",
-        "fields": {
-            "facet_value": 1,
-            "pattern": 3,
-            "event_type": [
-                "Resource Production"
             ]
         }
     },
@@ -467,32 +193,43 @@
         "pk": 4,
         "model": "valueaccounting.patternfacetvalue",
         "fields": {
-            "facet_value": 3,
-            "pattern": 3,
+            "facet_value": 2,
+            "pattern": 2,
+            "event_type": [
+                "Resource Production"
+            ]
+        }
+    },
+    {
+        "pk": 6,
+        "model": "valueaccounting.patternfacetvalue",
+        "fields": {
+            "facet_value": 4,
+            "pattern": 2,
+            "event_type": [
+                "Resource use"
+            ]
+        }
+    },
+    {
+        "pk": 5,
+        "model": "valueaccounting.patternfacetvalue",
+        "fields": {
+            "facet_value": 1,
+            "pattern": 2,
             "event_type": [
                 "Time Contribution"
             ]
         }
     },
     {
-        "pk": 15,
+        "pk": 1,
         "model": "valueaccounting.patternfacetvalue",
         "fields": {
             "facet_value": 1,
-            "pattern": 7,
+            "pattern": 1,
             "event_type": [
-                "Expense"
-            ]
-        }
-    },
-    {
-        "pk": 16,
-        "model": "valueaccounting.patternfacetvalue",
-        "fields": {
-            "facet_value": 4,
-            "pattern": 7,
-            "event_type": [
-                "Payment"
+                "Time Contribution"
             ]
         }
     },
@@ -500,76 +237,43 @@
         "pk": 17,
         "model": "valueaccounting.patternfacetvalue",
         "fields": {
-            "facet_value": 1,
-            "pattern": 7,
+            "facet_value": 3,
+            "pattern": 6,
             "event_type": [
-                "Receipt"
+                "Payout"
             ]
         }
     },
     {
-        "pk": 18,
+        "pk": 13,
+        "model": "valueaccounting.patternfacetvalue",
+        "fields": {
+            "facet_value": 1,
+            "pattern": 4,
+            "event_type": [
+                "Todo"
+            ]
+        }
+    },
+    {
+        "pk": 7,
         "model": "valueaccounting.patternfacetvalue",
         "fields": {
             "facet_value": 2,
-            "pattern": 7,
+            "pattern": 3,
             "event_type": [
-                "Time Contribution"
+                "Change"
             ]
         }
     },
     {
-        "pk": 24,
-        "model": "valueaccounting.patternfacetvalue",
-        "fields": {
-            "facet_value": 4,
-            "pattern": 10,
-            "event_type": [
-                "Payment"
-            ]
-        }
-    },
-    {
-        "pk": 25,
-        "model": "valueaccounting.patternfacetvalue",
-        "fields": {
-            "facet_value": 1,
-            "pattern": 10,
-            "event_type": [
-                "Receipt"
-            ]
-        }
-    },
-    {
-        "pk": 30,
-        "model": "valueaccounting.patternfacetvalue",
-        "fields": {
-            "facet_value": 4,
-            "pattern": 15,
-            "event_type": [
-                "Cash Receipt"
-            ]
-        }
-    },
-    {
-        "pk": 31,
-        "model": "valueaccounting.patternfacetvalue",
-        "fields": {
-            "facet_value": 1,
-            "pattern": 15,
-            "event_type": [
-                "Shipment"
-            ]
-        }
-    },
-    {
-        "pk": 32,
+        "pk": 10,
         "model": "valueaccounting.patternfacetvalue",
         "fields": {
             "facet_value": 2,
-            "pattern": 15,
+            "pattern": 3,
             "event_type": [
-                "Time Contribution"
+                "Resource Consumption"
             ]
         }
     },
@@ -578,9 +282,9 @@
         "model": "valueaccounting.patternfacetvalue",
         "fields": {
             "facet_value": 2,
-            "pattern": 5,
+            "pattern": 3,
             "event_type": [
-                "Todo"
+                "Create Changeable"
             ]
         }
     },
@@ -588,11 +292,404 @@
         "pk": 9,
         "model": "valueaccounting.patternfacetvalue",
         "fields": {
-            "facet_value": 3,
-            "pattern": 5,
+            "facet_value": 2,
+            "pattern": 3,
             "event_type": [
-                "Todo"
+                "To Be Changed"
             ]
+        }
+    },
+    {
+        "pk": 11,
+        "model": "valueaccounting.patternfacetvalue",
+        "fields": {
+            "facet_value": 4,
+            "pattern": 3,
+            "event_type": [
+                "Resource use"
+            ]
+        }
+    },
+    {
+        "pk": 12,
+        "model": "valueaccounting.patternfacetvalue",
+        "fields": {
+            "facet_value": 1,
+            "pattern": 3,
+            "event_type": [
+                "Time Contribution"
+            ]
+        }
+    },
+    {
+        "pk": 3,
+        "model": "valueaccounting.exchangetype",
+        "fields": {
+            "changed_date": "2016-06-28",
+            "name": "Internal Transfer",
+            "changed_by": null,
+            "created_by": [
+                "lynn"
+            ],
+            "use_case": [
+                "intrnl_xfer"
+            ],
+            "created_date": "2016-06-28",
+            "slug": "internal-transfer",
+            "description": null
+        }
+    },
+    {
+        "pk": 1,
+        "model": "valueaccounting.exchangetype",
+        "fields": {
+            "changed_date": "2016-04-26",
+            "name": "Purchase",
+            "changed_by": null,
+            "created_by": [
+                "lynn"
+            ],
+            "use_case": [
+                "supply_xfer"
+            ],
+            "created_date": "2016-04-26",
+            "slug": "purchase",
+            "description": null
+        }
+    },
+    {
+        "pk": 2,
+        "model": "valueaccounting.exchangetype",
+        "fields": {
+            "changed_date": "2016-04-26",
+            "name": "Sale",
+            "changed_by": null,
+            "created_by": [
+                "lynn"
+            ],
+            "use_case": [
+                "demand_xfer"
+            ],
+            "created_date": "2016-04-26",
+            "slug": "sale",
+            "description": null
+        }
+    },
+    {
+        "pk": 1,
+        "model": "valueaccounting.transfertype",
+        "fields": {
+            "receive_agent_association_type": null,
+            "changed_date": "2016-04-26",
+            "description": "Receipt of goods or services",
+            "is_to_distribute": false,
+            "sequence": 1,
+            "receive_agent_is_context": true,
+            "is_currency": false,
+            "is_reciprocal": false,
+            "give_agent_association_type": 3,
+            "created_by": [
+                "lynn"
+            ],
+            "exchange_type": 1,
+            "created_date": "2016-04-26",
+            "give_agent_is_context": false,
+            "is_contribution": false,
+            "can_create_resource": true,
+            "changed_by": null,
+            "name": "Receipt"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "valueaccounting.transfertype",
+        "fields": {
+            "receive_agent_association_type": 4,
+            "changed_date": "2016-04-26",
+            "description": "Delivery or shipment",
+            "is_to_distribute": false,
+            "sequence": 1,
+            "receive_agent_is_context": false,
+            "is_currency": false,
+            "is_reciprocal": false,
+            "give_agent_association_type": null,
+            "created_by": [
+                "lynn"
+            ],
+            "exchange_type": 2,
+            "created_date": "2016-04-26",
+            "give_agent_is_context": true,
+            "is_contribution": false,
+            "can_create_resource": false,
+            "changed_by": null,
+            "name": "Delivery"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "valueaccounting.transfertype",
+        "fields": {
+            "receive_agent_association_type": null,
+            "changed_date": "2016-06-28",
+            "description": "",
+            "is_to_distribute": false,
+            "sequence": 1,
+            "receive_agent_is_context": false,
+            "is_currency": false,
+            "is_reciprocal": false,
+            "give_agent_association_type": null,
+            "created_by": [
+                "lynn"
+            ],
+            "exchange_type": 3,
+            "created_date": "2016-06-28",
+            "give_agent_is_context": false,
+            "is_contribution": false,
+            "can_create_resource": false,
+            "changed_by": null,
+            "name": "Transfer"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "valueaccounting.transfertype",
+        "fields": {
+            "receive_agent_association_type": 3,
+            "changed_date": "2016-04-26",
+            "description": "Payment for the goods or services received",
+            "is_to_distribute": false,
+            "sequence": 2,
+            "receive_agent_is_context": false,
+            "is_currency": true,
+            "is_reciprocal": true,
+            "give_agent_association_type": null,
+            "created_by": [
+                "lynn"
+            ],
+            "exchange_type": 1,
+            "created_date": "2016-04-26",
+            "give_agent_is_context": true,
+            "is_contribution": false,
+            "can_create_resource": false,
+            "changed_by": null,
+            "name": "Payment"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "valueaccounting.transfertype",
+        "fields": {
+            "receive_agent_association_type": null,
+            "changed_date": "2016-04-26",
+            "description": "Incoming payment for items shipped or delivered.",
+            "is_to_distribute": true,
+            "sequence": 2,
+            "receive_agent_is_context": true,
+            "is_currency": true,
+            "is_reciprocal": true,
+            "give_agent_association_type": 4,
+            "created_by": [
+                "lynn"
+            ],
+            "exchange_type": 2,
+            "created_date": "2016-04-26",
+            "give_agent_is_context": false,
+            "is_contribution": false,
+            "can_create_resource": false,
+            "changed_by": null,
+            "name": "Payment"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "valueaccounting.transfertype",
+        "fields": {
+            "receive_agent_association_type": null,
+            "changed_date": "2016-06-28",
+            "description": "",
+            "is_to_distribute": false,
+            "sequence": 2,
+            "receive_agent_is_context": false,
+            "is_currency": false,
+            "is_reciprocal": true,
+            "give_agent_association_type": null,
+            "created_by": [
+                "lynn"
+            ],
+            "exchange_type": 3,
+            "created_date": "2016-06-28",
+            "give_agent_is_context": false,
+            "is_contribution": false,
+            "can_create_resource": false,
+            "changed_by": null,
+            "name": "Reciprocal Transfer"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "valueaccounting.transfertypefacetvalue",
+        "fields": {
+            "facet_value": 2,
+            "transfer_type": 1
+        }
+    },
+    {
+        "pk": 3,
+        "model": "valueaccounting.transfertypefacetvalue",
+        "fields": {
+            "facet_value": 2,
+            "transfer_type": 3
+        }
+    },
+    {
+        "pk": 5,
+        "model": "valueaccounting.transfertypefacetvalue",
+        "fields": {
+            "facet_value": 2,
+            "transfer_type": 5
+        }
+    },
+    {
+        "pk": 2,
+        "model": "valueaccounting.transfertypefacetvalue",
+        "fields": {
+            "facet_value": 3,
+            "transfer_type": 2
+        }
+    },
+    {
+        "pk": 4,
+        "model": "valueaccounting.transfertypefacetvalue",
+        "fields": {
+            "facet_value": 3,
+            "transfer_type": 4
+        }
+    },
+    {
+        "pk": 6,
+        "model": "valueaccounting.transfertypefacetvalue",
+        "fields": {
+            "facet_value": 2,
+            "transfer_type": 6
+        }
+    },
+    {
+        "pk": 1,
+        "model": "valueaccounting.agentassociationtype",
+        "fields": {
+            "plural_name": "Children",
+            "description": "",
+            "inverse_label": "has child",
+            "association_behavior": "child",
+            "label": "is child of",
+            "identifier": "child",
+            "name": "Child"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "valueaccounting.agentassociationtype",
+        "fields": {
+            "plural_name": "Members",
+            "description": null,
+            "inverse_label": "has member",
+            "association_behavior": "member",
+            "label": "is member of",
+            "identifier": "member",
+            "name": "Member"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "valueaccounting.agentassociationtype",
+        "fields": {
+            "plural_name": "Suppliers",
+            "description": null,
+            "inverse_label": "has supplier",
+            "association_behavior": "supplier",
+            "label": "is supplier of",
+            "identifier": "supplier",
+            "name": "Supplier"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "valueaccounting.agentassociationtype",
+        "fields": {
+            "plural_name": "Customers",
+            "description": null,
+            "inverse_label": "has customer",
+            "association_behavior": "customer",
+            "label": "is customer of",
+            "identifier": "customer",
+            "name": "Customer"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "valueaccounting.unit",
+        "fields": {
+            "unit_type": "time",
+            "abbrev": "Day",
+            "symbol": "",
+            "name": "Day"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "valueaccounting.unit",
+        "fields": {
+            "unit_type": "value",
+            "abbrev": "USD",
+            "symbol": "$",
+            "name": "Dollar"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "valueaccounting.unit",
+        "fields": {
+            "unit_type": "quantity",
+            "abbrev": "EA",
+            "symbol": "",
+            "name": "Each"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "valueaccounting.unit",
+        "fields": {
+            "unit_type": "time",
+            "abbrev": "Hr",
+            "symbol": "",
+            "name": "Hour"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "valueaccounting.unit",
+        "fields": {
+            "unit_type": "weight",
+            "abbrev": "lb",
+            "symbol": "",
+            "name": "Pounds"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "valueaccounting.homepagelayout",
+        "fields": {
+            "needs_panel_headline": "",
+            "panel_1": "",
+            "panel_2": "",
+            "panel_3": "",
+            "banner": "<div style=\"text-align: center; font-size: 1.8em;  font-weight: bold; margin: 0; padding: 0;\">\r\nWelcome to NRP\r\n</div>\r\n<p style=\"text-align: center; margin: 0; padding: 0;\">\r\nSee also  <a href=\"/accounting/tutorials/\">the setup tutorials</a>.\r\n</p>\r\n<div style=\"text-align: center; margin: 0; padding: 0;\">\r\n<img id=\"navmap\"  src=\"/static/img/navmap.png\"  width=\"691\" height=\"457\" border=\"0\" usemap=\"#map\" alt=\"Links into the system\"  class=\"map\" style=\"display: block; margin: 0 auto;\" />\r\n<div style=\"display: none;\">\r\n\r\n<map name=\"map\">\r\n<!-- #$-:Image map file created by GIMP Image Map plug-in -->\r\n<!-- #$-:GIMP Image Map plug-in by Maurits Rijk -->\r\n<!-- #$-:Please do not edit lines starting with \"#$\" -->\r\n<!-- #$VERSION:2.3 -->\r\n<!-- #$AUTHOR:Lynn Foster -->\r\n<area shape=\"rect\" coords=\"28,44,139,97\" alt=\"Setup Organization\" href=\"/accounting/projects\" style=\"outline:none;\" target=\"_self\" data-maphilight='{\"stroke\":false,\"fillOpacity\":0.05}' />\r\n<area shape=\"rect\" coords=\"148,43,260,98\" alt=\"Setup Resource Types and Recipes\" href=\"/accounting/resources/\" style=\"outline:none;\" target=\"_self\" data-maphilight='{\"stroke\":false,\"fillOpacity\":0.05}' />\r\n<area shape=\"rect\" coords=\"270,42,379,97\" alt=\"Setup Exchange Types\" href=\"/accounting/exchange-types/\" style=\"outline:none;\" target=\"_self\" data-maphilight='{\"stroke\":false,\"fillOpacity\":0.05}' />\r\n<area shape=\"rect\" coords=\"391,44,499,95\" alt=\"Setup Value Equations\" href=\"/accounting/value-equations/\" style=\"outline:none;\" target=\"_self\" data-maphilight='{\"stroke\":false,\"fillOpacity\":0.05}' />\r\n<area shape=\"rect\" coords=\"30,176,140,228\" alt=\"Create Customer and Work Orders\" href=\"/accounting/demand/\" style=\"outline:none;\" target=\"_self\" data-maphilight='{\"stroke\":false,\"fillOpacity\":0.05}' />\r\n<area shape=\"rect\" coords=\"31,238,140,289\" alt=\"Create Customer Order\" href=\"/accounting/create-order/\" style=\"outline:none;\" target=\"_self\" data-maphilight='{\"stroke\":false,\"fillOpacity\":0.05}' />\r\n<area shape=\"rect\" coords=\"29,303,138,355\" alt=\"Plan Work From Recipe\" href=\"/accounting/plan-from-recipe/\" style=\"outline:none;\" target=\"_self\" data-maphilight='{\"stroke\":false,\"fillOpacity\":0.05}' />\r\n<area shape=\"rect\" coords=\"31,370,139,423\" alt=\"Plan Work Without Recipe\" href=\"/accounting/process-selections/\" style=\"outline:none;\" target=\"_self\" data-maphilight='{\"stroke\":false,\"fillOpacity\":0.05}' />\r\n<area shape=\"rect\" coords=\"191,176,304,229\" alt=\"Log Incoming Exchange\" href=\"/accounting/supply/\" style=\"outline:none;\" target=\"_self\" data-maphilight='{\"stroke\":false,\"fillOpacity\":0.05}' />\r\n<area shape=\"rect\" coords=\"190,307,300,361\" alt=\"All Work\" href=\"/accounting/work/\" style=\"outline:none;\" target=\"_self\" data-maphilight='{\"stroke\":false,\"fillOpacity\":0.05}' />\r\n<area shape=\"rect\" coords=\"193,366,300,422\" alt=\"My Work\" href=\"/accounting/start/\" style=\"outline:none;\" target=\"_self\" data-maphilight='{\"stroke\":false,\"fillOpacity\":0.05}' />\r\n<area shape=\"rect\" coords=\"374,179,483,233\" alt=\"Log Outgoing Exchange\" href=\"/accounting/demand/\" style=\"outline:none;\" target=\"_self\" data-maphilight='{\"stroke\":false,\"fillOpacity\":0.05}' />\r\n<area shape=\"rect\" coords=\"375,255,484,307\" alt=\"Distribute Rewards Using Value Equation\" href=\"/demand/value-equations/\" style=\"outline:none;\" target=\"_self\" data-maphilight='{\"stroke\":false,\"fillOpacity\":0.05}' />\r\n<area shape=\"rect\" coords=\"366,371,480,424\" alt=\"Log Non-Production Work\" href=\"/accounting/unscheduled-time/\" style=\"outline:none;\" target=\"_self\" data-maphilight='{\"stroke\":false,\"fillOpacity\":0.05}' />\r\n<area shape=\"rect\" coords=\"545,61,655,114\" alt=\"Cash Accounting Report\" href=\"/accounting/cash-report/\" style=\"outline:none;\" target=\"_self\" data-maphilight='{\"stroke\":false,\"fillOpacity\":0.05}' />\r\n<area shape=\"rect\" coords=\"543,123,655,175\" alt=\"All Contributions Report\" href=\"/accounting/all-contributions/\" style=\"outline:none;\" target=\"_self\" data-maphilight='{\"stroke\":false,\"fillOpacity\":0.05}' />\r\n<area shape=\"rect\" coords=\"545,184,653,237\" alt=\"Incoming Exchanges Report\" href=\"/accounting/exchanges/\" style=\"outline:none;\" target=\"_self\" data-maphilight='{\"stroke\":false,\"fillOpacity\":0.05}' />\r\n<area shape=\"rect\" coords=\"545,244,654,299\" alt=\"Outgoing Exchanges Report\" href=\"/accounting/demand-exchanges/\" style=\"outline:none;\" target=\"_self\" data-maphilight='{\"stroke\":false,\"fillOpacity\":0.05}' />\r\n<area shape=\"rect\" coords=\"546,309,654,360\" alt=\"Distributions Report\" href=\"/accounting/distributions\" style=\"outline:none;\" target=\"_self\" data-maphilight='{\"stroke\":false,\"fillOpacity\":0.05}' />\r\n<area shape=\"rect\" coords=\"544,372,656,422\" alt=\"Inventory Listing\" href=\"/accounting/inventory/\" style=\"outline:none;\" target=\"_self\" data-maphilight='{\"stroke\":false,\"fillOpacity\":0.05}' />\r\n</map>\r\n\r\n</div>\r\n</div>",
+            "footer": "",
+            "creations_panel_headline": "",
+            "use_work_panel": false,
+            "use_needs_panel": false,
+            "work_panel_headline": "",
+            "use_creations_panel": false
         }
     }
 ]
