@@ -1,10 +1,15 @@
 {% load i18n %}
 {% load thumbnail %}
 
-{% if layout.work_panel_headline %}
-    {{ layout.work_panel_headline|safe|urlize|linebreaks }}
-{% else %}
-    <legend> Work to do </legend>
+<legend>
+    {% if layout.work_panel_headline %}
+        {{ layout.work_panel_headline|safe|urlize }}
+    {% else %}
+        Work to do
+    {% endif %}
+</legend>
+
+{% if not layout.work_panel_headline %}
     <p style="font-style: italic;" >
         Your work will be eligible for income sharing.
     </p>
