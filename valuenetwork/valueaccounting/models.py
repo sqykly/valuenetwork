@@ -147,10 +147,27 @@ class HomePageLayout(models.Model):
     panel_3 = models.TextField(_('panel 3'), blank=True, null=True,
         help_text=_("HTML text for Panel 3"))
     footer = models.TextField(_('footer'), blank=True, null=True)
-    
+
+    FULL_WIDTH = 12
+
     class Meta:
         verbose_name_plural = _('home page layout')
-    
+
+    def column_width(self):
+        return self.FULL_WIDTH / self.__column_count()
+
+    def use_creations_or_html_panel(self):
+        return self.use_creations_panel or len(self.panel_3.strip()) > 0
+
+    def use_needs_or_html_panel(self):
+        return self.use_needs_panel or len(self.panel_2.strip()) > 0
+
+    def use_work_or_html_panel(self):
+        return self.use_work_panel or len(self.panel_1.strip()) > 0
+
+    def __column_count(self):
+        use_project_panel = True
+        return sum([use_project_panel, self.use_creations_or_html_panel(), self.use_needs_or_html_panel(), self.use_work_or_html_panel()])
 
 #for help text
 PAGE_CHOICES = (
