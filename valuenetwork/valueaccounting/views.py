@@ -82,6 +82,8 @@ def home(request):
                         rts.append(vc.resource_type)
                         value_creations.append(vc)
             template_params["value_creations"] = value_creations
+
+    template_params["active_projects"] = EconomicAgent.active_projects()
     return render_to_response("homepage.html",
         template_params,
         context_instance=RequestContext(request))
@@ -3887,12 +3889,7 @@ def this_week(request):
     agent = get_agent(request)
     end = datetime.date.today()
     start = end - datetime.timedelta(days=7)
-    #start = end - datetime.timedelta(days=40)
-    #import pdb; pdb.set_trace()
-    
-    work_events = EconomicEvent.objects.filter(
-        event_type__relationship="work",
-        event_date__range=(start, end))
+    work_events = EconomicEvent.work_events_since(days_ago=7)
     participants = [e.from_agent for e in work_events if e.from_agent]
     total_participants = len(list(set(participants)))
     total_hours = sum(event.quantity for event in work_events)
