@@ -7601,6 +7601,8 @@ class Transfer(models.Model):
         resource = ""
         from_to = ""
         qty = ""
+        give_text = ""
+        receive_text = ""
         commits = self.commitments.all()
         if commits:
             et_give = EventType.objects.get(name="Give")
@@ -7645,6 +7647,8 @@ class Transfer(models.Model):
         resource = ""
         from_to = ""
         qty = ""
+        give_text = ""
+        receive_text = ""
         events = self.events.all()
         if events:
             et_give = EventType.objects.get(name="Give")
@@ -7691,6 +7695,8 @@ class Transfer(models.Model):
         resource = ""
         from_to = ""
         qty = ""
+        give_text = ""
+        receive_text = ""
         events = self.events.all()
         if events:
             et_give = EventType.objects.get(name="Give")
