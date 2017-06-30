@@ -5611,6 +5611,7 @@ def add_transfer(request, exchange_id, transfer_type_id):
             et2 = None
             res_identifier = None
             if qty:
+                #import pdb; pdb.set_trace()
                 et_give = EventType.objects.get(name="Give")
                 et_receive = EventType.objects.get(name="Receive")
                 event_date = data["event_date"]
@@ -5625,7 +5626,7 @@ def add_transfer(request, exchange_id, transfer_type_id):
                 rt = data["resource_type"]
                 #if not transfer_type.can_create_resource:
                 res = data["resource"]
-                if transfer_type.is_currency:
+                if transfer_type.is_currency or transfer_type.exchange_type.use_case.identifier == "intrnl_xfer":
                     res_from = data["from_resource"]
                 description = data["description"]
                 if transfer_type.is_currency:
@@ -5688,7 +5689,7 @@ def add_transfer(request, exchange_id, transfer_type_id):
                     else:
                         et = et_give
                         et2 = et_receive
-                    if transfer_type.is_currency:
+                    if transfer_type.is_currency or transfer_type.exchange_type.use_case.identifier == "intrnl_xfer":
                         if res != res_from:
                             if res:
                                 res.quantity += qty

@@ -1574,12 +1574,12 @@ class TransferForm(forms.Form):
         queryset=EconomicResource.objects.none(),
         label="Resource transferred (optional if not inventoried)",
         required=False,
-        widget=forms.Select(attrs={'class': 'resource input-xlarge chzn-select',}))
+        widget=forms.Select(attrs={'class': 'resource input-xlarge',}))
     from_resource = ResourceModelChoiceField(
         queryset=EconomicResource.objects.none(),
         label="Resource transferred from (optional if not inventoried)",
         required=False,
-        widget=forms.Select(attrs={'class': 'resource input-xlarge chzn-select',}))
+        widget=forms.Select(attrs={'class': 'resource input-xlarge',}))
     value = forms.DecimalField(
         label="Value (total, not per unit)",
         initial=0,
@@ -1632,6 +1632,7 @@ class TransferForm(forms.Form):
         widget=forms.Textarea(attrs={'class': 'item-description',})) 
 
     def __init__(self, transfer_type=None, context_agent=None, resource_type=None, posting=False, *args, **kwargs):
+        #import pdb; pdb.set_trace()
         super(TransferForm, self).__init__(*args, **kwargs)
         #import pdb; pdb.set_trace()
         if transfer_type:

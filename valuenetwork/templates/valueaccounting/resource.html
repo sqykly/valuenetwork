@@ -293,7 +293,7 @@
                              {% if event.event_type.relationship != "cite" %}
                                 {{ event.quantity }} {{ event.unit_of_quantity.abbrev }}
                              {% endif %}
-                             {{ event.event_date }} {% trans "from" %}: {{ event.from_agent }}</li>
+                             {{ event.event_date }} {% trans "to" %}: {{ event.to_agent }}</li>
                         {% if event.process %}
                             <ul>
                                 <li>
@@ -318,6 +318,16 @@
                                 {% endfor %}
                             </ul>
                         {% endif %}
+                        {% if event.transfer %}
+                                {% if event.transfer.exchange %}
+                                    {% with event.transfer.exchange as exchange %}
+                                    <ul>
+                                        <li><b>{% trans "Exchange" %}:</b> <a href="{% url exchange_logging exchange_type_id=0 exchange_id=exchange.id %}">{{ exchange }}</a>
+                                        </li>
+                                    </ul>
+                                    {% endwith %}
+                                {% endif %}
+                            {% endif %}
                     {% endfor %}
                 </ul>
             {% else %}

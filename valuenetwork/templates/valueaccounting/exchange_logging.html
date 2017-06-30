@@ -212,6 +212,8 @@ li {
                                                 {% else %}
                                                     Resource transferred (no entry if not inventoried)<br />{{ ax_form.resource }}<br />
                                                 {% endif %}
+                                            {% else %}
+                                                Resource transferred from (no entry if not inventoried)<br />{{ ax_form.from_resource }}<br />
                                             {% endif %}
                                             Description:<br />{{ ax_form.description }}<br />
                                             {% if not slot.is_currency %}
@@ -564,7 +566,7 @@ li {
                                                     Account from (if virtual account)<br />{{ ax_form.from_resource }}<br />
                                                     Account to (if virtual account)<br />{{ ax_form.resource }}<br />
                                                 {% else %}
-                                                    Resource transferred (no entry if not inventoried)<br />{{ ax_form.resource }}<br />
+                                                    Resource transferred from (no entry if not inventoried)<br />{{ ax_form.from_resource }}<br />
                                                 {% endif %}
                                             {% endif %}
                                             Description:<br />{{ ax_form.description }}<br />
@@ -1098,11 +1100,15 @@ li {
                 var targetId = event.target.id;
                 var prefix = targetId.split('-')[0];
                 var resourceFieldId = "#" + prefix + "-resource";
+                var resourceField = $(resourceFieldId);
                 $(resourceFieldId).empty();
+                var fromResourceFieldId = "#" + prefix + "-from_resource";
+                var fromResourceField = $(fromResourceFieldId);
                 var jsonUrl = encodeURI("/accounting/json-resourcetype-resources-locations/" + resourceTypeId + "/");
                 $.get(jsonUrl,
                     function(data){
-                    $(resourceFieldId).append('<option value="">' + '--------' + '</option>');
+                    resourceField.append('<option value="">' + '--------' + '</option>');
+                    fromResourceField.append('<option value="">' + '--------' + '</option>');
                     for(var i=0 ; i<data.length ; i++)
                     {
                         var id = data[i].fields['pk'];
@@ -1111,9 +1117,10 @@ li {
                         if (loc){
                             name = name + " at " + loc;
                         }
-                        $(resourceFieldId).append('<option value="' + id + '">' + name + '</option>') 
+                        resourceField.append('<option value="' + id + '">' + name + '</option>');
+                        fromResourceField.append('<option value="' + id + '">' + name + '</option>');
                     }
-                    $(".chzn-select").trigger("liszt:updated");
+                    //$(".chzn-select").trigger("liszt:updated");
                 });
             }
         }

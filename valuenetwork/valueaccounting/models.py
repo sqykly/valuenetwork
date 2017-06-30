@@ -4786,7 +4786,7 @@ class EconomicResource(models.Model):
         return self.events.filter(
             Q(event_type__relationship='in')|Q(event_type__relationship='consume')|Q(event_type__relationship='use')
             |Q(event_type__relationship='cite')|Q(event_type__relationship='pay')|Q(event_type__relationship='shipment')
-            |Q(event_type__relationship='shipment')|Q(event_type__relationship='disburse'))
+            |Q(event_type__relationship='give')|Q(event_type__relationship='shipment')|Q(event_type__relationship='disburse'))
 
     def last_exchange_event(self):  #todo: could a resource ever go thru the same exchange stage more than once?
         #import pdb; pdb.set_trace()
