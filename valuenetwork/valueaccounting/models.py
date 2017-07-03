@@ -669,9 +669,24 @@ class EconomicAgent(models.Model):
               
     def supply_exchange_count(self):
         return Exchange.objects.supply_exchanges().filter(context_agent=self).count()
-              
+
+    def internal_exchange_set(self, start=None, end=None):
+        all_internals = Exchange.objects.internal_exchanges(start, end)
+        my_internals = set()
+        for x in all_internals:
+            for evt in x.xfer_events():
+                if evt.from_agent==self or evt.to_agent==self or evt.context_agent==self:
+                    my_internals.add(x)
+        return my_internals
+
+    def internal_exchanges(self, start=None, end=None):
+        my_internals = list(self.internal_exchange_set(start, end))
+        my_internals.sort(lambda x, y: cmp(x.start_date, y.start_date))
+        return my_internals
+            
     def internal_exchange_count(self):
-        return Exchange.objects.internal_exchanges().filter(context_agent=self).count()
+        #import pdb; pdb.set_trace()
+        return len(self.internal_exchange_set())
                
     def with_all_sub_agents(self):
         from valuenetwork.valueaccounting.utils import flattened_children_by_association

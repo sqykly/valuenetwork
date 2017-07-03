@@ -10418,11 +10418,16 @@ def internal_exchanges(request, agent_id=None):
         if dt_selection_form.is_valid():
             start = dt_selection_form.cleaned_data["start_date"]
             end = dt_selection_form.cleaned_data["end_date"]
-            exchanges = Exchange.objects.internal_exchanges(start, end)
+            if agent_id:
+                exchanges = agent.internal_exchanges(start, end)
+            else:
+                exchanges = Exchange.objects.internal_exchanges(start, end)
         else:
-            exchanges = Exchange.objects.internal_exchanges()
-        if agent_id:
-            exchanges = exchanges.filter(context_agent=agent)
+            if agent_id:
+                exchanges = agent.internal_exchanges(start, end)
+            else:
+                exchanges = Exchange.objects.internal_exchanges(start, end)
+
         selected_values = request.POST["categories"]
         if selected_values:
             sv = selected_values.split(",")
@@ -10461,7 +10466,7 @@ def internal_exchanges(request, agent_id=None):
                 
     else:
         if agent_id:
-            exchanges = Exchange.objects.internal_exchanges(start, end).filter(context_agent=agent)
+            exchanges = agent.internal_exchanges(start, end)
         else:
             exchanges = Exchange.objects.internal_exchanges(start, end)
 
