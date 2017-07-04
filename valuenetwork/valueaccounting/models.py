@@ -674,10 +674,37 @@ class EconomicAgent(models.Model):
         all_internals = Exchange.objects.internal_exchanges(start, end)
         my_internals = set()
         for x in all_internals:
-            for evt in x.xfer_events():
-                if evt.from_agent==self or evt.to_agent==self or evt.context_agent==self:
+            events = x.xfer_events()
+            if events:
+                for evt in events:
+                    if evt.from_agent==self or evt.to_agent==self or evt.context_agent==self:
+                        my_internals.add(x)
+            else:
+                if x.context_agent == self:
                     my_internals.add(x)
         return my_internals
+
+
+    # that (internal_exchange_set, above) is messy.
+    # here's the start of a different way to do it...
+    # currently lacks exchanges without transfers.
+    def internal_transfer_ids(self):
+        return EconomicEvent.objects.filter(
+            Q(transfer__exchange__use_case__identifier="intrnl_xfer"),
+            Q(from_agent=self)|Q(to_agent=self)|Q(context_agent=self)
+            ).values_list('transfer', flat=True).distinct()
+
+    def internal_exchange_ids(self):
+        xfer_ids = self.internal_transfer_ids()
+        return Transfer.objects.filter(id__in=xfer_ids).values_list('exchange', flat=True).distinct()
+
+    def internal_exchange_countx(self):
+        return len(self.internal_exchange_ids())
+        
+    def internal_exchanges(self, start=None, end=None):
+        my_internals = list(self.internal_exchange_set(start, end))
+        my_internals.sort(lambda x, y: cmp(x.start_date, y.start_date))
+        return my_internals   
 
     def internal_exchanges(self, start=None, end=None):
         my_internals = list(self.internal_exchange_set(start, end))
