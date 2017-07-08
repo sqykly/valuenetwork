@@ -516,6 +516,13 @@ li {
                                         {% if xfer.description %}
                                             <div class="notes"> {{ xfer.description|urlize|linebreaks }} </div>
                                         {% endif %}
+                                        {% if xfer.events.all %}
+                                            {% with xfer.events.all|first as event %}
+                                                {% if event.description %}
+                                                    <div class="notes"> {{ event.description|urlize|linebreaks }} </div>
+                                                {% endif %}
+                                            {% endwith %}
+                                        {% endif %}
                                     {% endif %}
                                 </div>
                             {% endfor %}
