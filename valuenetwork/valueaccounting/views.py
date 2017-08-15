@@ -7178,10 +7178,12 @@ def process_oriented_logging(request, process_id):
     
     work_reqs = process.work_requirements()
     consume_reqs = process.consumed_input_requirements()
+    pack_reqs = process.packed_input_requirements()
     use_reqs = process.used_input_requirements()
     unplanned_work = process.uncommitted_work_events()
     
     if agent and pattern:
+        #import pdb; pdb.set_trace()
         slots = pattern.slots()
         event_types = pattern.event_types()
         #if request.user.is_superuser or request.user == process.created_by:
@@ -7224,7 +7226,7 @@ def process_oriented_logging(request, process_id):
                     changeable_requirement = process.changeable_requirements()
                     if changeable_requirement:
                         changeable_requirement = changeable_requirement[0]
-                else:
+                if output_resource_types:
                     add_output_form = ProcessOutputForm(prefix='output')
                     add_output_form.fields["resource_type"].queryset = output_resource_types
         if "work" in slots:
@@ -7310,6 +7312,7 @@ def process_oriented_logging(request, process_id):
         "changeable_requirement": changeable_requirement,
         "work_reqs": work_reqs,        
         "consume_reqs": consume_reqs,
+        "pack_reqs": pack_reqs,
         "uncommitted_consumption": process.uncommitted_consumption_events(),
         "use_reqs": use_reqs,
         "uncommitted_use": process.uncommitted_use_events(),

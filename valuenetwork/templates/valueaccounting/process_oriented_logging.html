@@ -235,6 +235,7 @@ hr {
                     </span>
 
                     {% if logger %}
+                        {% if item.stage %}
                         {% if changeable_requirement %}
                             <div>
                                 {{ to_be_changed_requirement.resource_type.name }}@{{ to_be_changed_requirement.stage }} change to: @{{ changeable_requirement.stage }}
@@ -278,8 +279,8 @@ hr {
                                     {% endfor %}
                                 {% endif %}
                             </div>
-                            
-                        {% else %}
+                           {% endif %} 
+                        {% endif %}
                             {% if add_output_form %}
                                 {% if not item.stage %}
 
@@ -361,7 +362,7 @@ hr {
                                 </div>
                           {% endif %}
                         {% endif %}
-			        {% endif %}
+			        {% comment %}{% endif %}{% endcomment %}
 			    </div>
 			    
 			    {% if item.description %}
@@ -1147,6 +1148,230 @@ hr {
           </div>
 	    {% endif %}
 
+        {% if pack_reqs or uncommitted_packing or "pack" in slots %}
+            <div class="log-section">
+
+                <h2 style="margin-bottom: 4px;" >
+                    {% trans "Packable Inputs" %}
+                    {% if logger %}
+                        <a href="#addConsumableModal" role="button" class="btn btn-primary btn-mini" data-toggle="modal" title="Add a packable input requirement">
+                            {% trans "Add a packable input requirement" %}
+                        </a>
+                    {% endif %}
+                    {% if agent %}
+                        <a href="#unplannedConsumptionModal" role="button" class="btn btn-info btn-mini" data-toggle="modal" title="Log unplanned packing" >
+                            {% trans "Log unplanned packing" %}
+                        </a>
+                    {% endif %}
+                    <span class="info"> <a href="#" id="consume-info" data-toggle="popover" data-trigger='hover' title="Packed Inputs"
+                        data-content="Packable inputs are decremented from inventory, and packed into containers. Inventory is automatically adjusted.">
+                        <img src="{% static 'img/information-icon.png' %}" /></a>
+                    </span>
+                </h2>
+
+                 {% if agent %}
+                        <div class="modal hide fade" id="unplannedConsumptionModal" tabindex="-1" role="dialog" aria-labelledby="unplanned-consumption-label" aria-hidden="true">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h3 id="unplanned-consumption-label">{% trans "Add unplanned packing" %}</h3>
+                            </div>
+                            <div class="modal-body">
+                                <form class="consumption-form validateMe" name="cf" enctype="multipart/form-data" id="addUnplannedConsumptionForm"
+                                    action="{% url add_unplanned_input_event process_id=process.id slot='c' %}" method="POST" >
+                                  {% csrf_token %}
+                                  {{ unplanned_consumption_form|as_bootstrap }}
+                                  <div class="modal-footer">
+                                    <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
+                                    <button id="select-resource" class="btn btn-primary">{% trans "Add packing" %}</button>
+                                  </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    {% endif %}
+
+
+                {% for item in pack_reqs %}
+                  <div class="commitment" >
+                    <div>
+                        <span class="consumable-requirement" >
+                            <b>
+                                {{ item.resource_type.name }}{% if item.stage %}@{{ item.stage }}{% endif %}:
+                            </b>
+                            {{ item.quantity }} {{ item.unit_of_quantity }} {% trans "due" %} {{ item.due_date }}
+                        </span>
+                        {% if logger %}
+                            <a href="#commitmentModal{{ item.id }}" role="button" class="btn btn-info btn-mini" data-toggle="modal" title="Change packable requirement">
+                               <i class="icon-edit"></i>
+                            </a>
+
+                            <div class="modal hide fade commitmentModal" id="commitmentModal{{ item.id }}" tabindex="-1" role="dialog" aria-labelledby="commitment-label" aria-hidden="true">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                    <h3 id="commitment-label">{% trans "Change Requirement" %}</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="commitmentForm{{ item.id }} validateMe" name="com{{ item.id }}" enctype="multipart/form-data" action="{% url change_commitment commitment_id=item.id %}" method="POST" >
+                                        {% csrf_token %}
+                                        {{ item.changeform|as_bootstrap }}
+                                        <input type="hidden" id="next" name="next" value="process" />
+                                        <div class="modal-footer">
+                                            <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
+                                            <input type="submit" class="btn btn-primary" name="submit" value='{% trans "Save" %}' />
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <form
+                                style="display: inline;"
+                                class="delete-commitment-form"
+                                id="deleteCommitmentForm{{ item.id }}"
+                                action="{% url delete_process_commitment commitment_id=item.id %}"
+                                method="POST" >
+                                {% csrf_token %}
+                                <input type="hidden" id="next" name="next" value="process" />
+                                <button style="display: inline;"  class="btn btn-warning btn-mini" title="Delete packable requirement" >X</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                    {% if item.description %}
+                       <div class="notes"> {{ item.description|urlize|linebreaks }}</div>
+                    {% endif %}
+                    {% if item.consumable_resources %}
+                        {% for resource in item.consumable_resources %}
+                            <div class="onhand" >
+                                <b>{% trans "Onhand" %}:</b> <span class="event" >
+                                    <a class="resource" href="{% url resource resource_id=resource.id %}" target="_blank" >{{ resource.label }}</a>
+                                    {% if resource.stage %}
+                                        ~ Stage: {{ resource.stage }}
+                                    {% endif %}
+                                    ~ {{ resource.quantity }} {{ resource.unit_of_quantity }}
+                                    {% if resource.current_location %}
+                                        ~ Location: {{ resource.current_location }}
+                                    {% endif %}
+                                    {% if resource.agent_resource_roles.all %}
+                                        {% for item in resource.agent_resource_roles.all %}
+                                            ~ {{ item.role.name }}: {{ item.agent.nick }}
+                                        {% endfor %}
+                                    {% endif %}
+                                </span>
+                                {% if resource.quantity and logger %}
+                                    <a href="#consumeEventModal{{ resource.id }}" role="button" class="btn btn-info btn-mini" data-toggle="modal" title="Log your consumption of this resource" >
+                                    {% trans "Log packing" %}
+                                    </a>
+
+                                    <div class="modal hide fade eventModal" id="consumeEventModal{{ resource.id }}" tabindex="-1" role="dialog" aria-labelledby="event-label" aria-hidden="true">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                            <h3 id="event-label">{% trans "Log packing of" %} {{ resource.identifier }}</h3>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form class="eventForm{{ resource.id }} validateMe" name="efr{{ resource.id }}" enctype="multipart/form-data"
+                                                action="{% url add_consumption_event commitment_id=item.id resource_id=resource.id %}" method="POST" >
+                                                {% csrf_token %}
+                                                {{ resource.consumption_event_form|as_bootstrap }}
+                                              <div class="modal-footer">
+                                                <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
+                                                <input type="submit" class="btn btn-primary" name="submit" value='{% trans "Save" %}' />
+                                              </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% for event in resource.consuming_events %}
+                                    {% if event.commitment = item %}
+                                        <div class="use event-section" >
+                                            <span class="event-label">{% trans "Consumed" %}:</span><span>
+                                                 {{ event.quantity }} {{ event.unit_of_quantity }} {{ event.event_date }}
+                                                {% trans "by" %} {{ event.from_agent }}
+                                            </span>
+                                            {% if logger %}
+                                                {% comment %}
+                                                <a href="" class="btn btn-info btn-mini" title="Change" ><i class="icon-edit"></i></a>
+                                                {% endcomment %}
+                                                <form
+                                                    style="display: inline;"
+                                                    class="delete-form"
+                                                    id="deleteForm{{ event.id }}"
+                                                    action="{% url delete_event event_id=event.id %}"
+                                                    method="POST" >
+                                                    {% csrf_token %}
+                                                    <input type="hidden" id="next" name="next" value="process" />
+                                                    <button style="display: inline;"  class="btn btn-warning btn-mini" title="Delete consumption event" >X</button>
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    {% elif item.scheduled_receipts %}
+                        {% for ct in item.scheduled_receipts %}
+                            <p class="detail-line">
+                                <b>{% trans "Scheduled" %}:</b>
+                                <a href="{{ ct.process.get_absolute_url }}" target="_blank" >
+                                    {% if ct.stage %}@{{ ct.stage }}{% endif %}
+                                    {{ ct.quantity }} {{ ct.unit_of_quantity }}  {{ ct.due_date }}
+                                </a>
+                            </p>
+                        {% endfor %}
+                    {% else %}
+                        {% for source in item.sources %}
+                            <p class="detail-line">
+                                <b>{% trans "Possible source" %}:</b> <span class="source" >{{ source.agent.name }} {% trans "Lead time" %}: {{ source.lead_time }} {% trans "days" %}</span>
+                                <br/>
+                                {% comment %}
+                                {% if source.too_late %}
+                                    <form class="reskedForm" id="reskedForm-{{ source.id }}" action="{% url forward_schedule_source commitment_id=item.id source_id=source.id %}" method="POST" >
+                                        {% csrf_token %}
+                                        <input type="hidden" name="next" value="{% url process_details process_id=process.id %}" />
+                                        <span class="error" style="margin-left: 2em;">{% trans "Should have purchased" %} {{ source.order_release_date|timesince }} {% trans "ago" %}</span> &nbsp;
+                                        {% if super_logger %}
+                                            <button class="btn btn-warning btn-mini" title="Reschedule forward from purchase release date" >{% trans "Reschedule forward" %}</button>
+                                        {% endif %}
+                                    </form>
+                                {% else %}
+                                    {% trans "Purchase by:" %}{{ source.order_release_date }}
+                                {% endif %}
+                                {% endcomment %}
+                            </p>
+                        {% endfor %}
+                    {% endif %}
+            </div>
+
+                {% endfor %}
+
+                {% if uncommitted_consumption %}
+                    <h4 class="subsection-label">{% trans "Unplanned Consumption" %}:</h4>
+                    {% for event in uncommitted_consumption %}
+                        <div class="event-section" >
+                            <span class="event-label">{% trans "Consumed" %}:</span>
+                            <span class="event" >
+                                <b><a href="{% url resource resource_id=event.resource.id  %}">{{ event.resource.label }}</a></b>
+                                {{ event.quantity }} {{ event.unit_of_quantity }} {{ event.event_date }}
+                            </span>
+                            {% if logger %}
+                                {% comment %}
+                                <a href="" class="btn btn-info btn-mini" title="Change" ><i class="icon-edit"></i></a>
+                                {% endcomment %}
+                                <form
+                                    style="display: inline;"
+                                    class="delete-form"
+                                    id="deleteForm{{ event.id }}"
+                                    action="{% url delete_event event_id=event.id %}"
+                                    method="POST" >
+                                    {% csrf_token %}
+                                    <input type="hidden" id="next" name="next" value="process" />
+                                    <button style="display: inline;"  class="btn btn-warning btn-mini" title="Delete consumption event" >X</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+          </div>
+        {% endif %}
+	    
 	    {% if use_reqs or uncommitted_use  or "use" in slots %}
 		    <div class="log-section">
 		        <h2 style="margin-bottom: 4px;" >
@@ -1513,7 +1738,7 @@ hr {
 
               <div class="modal-footer">
 	            <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
-	            <button class="btn btn-primary">{% trans "Add consumable" %}</button>
+	            <button class="btn btn-primary">{% trans "Save" %}</button>
               </div>
 
 

@@ -1254,6 +1254,9 @@ DIRECTION_CHOICES = (
     ('in', _('input')),
     ('consume', _('consume')),
     ('use', _('use')),
+    ('pack', _('pack')),
+    ('open', _('open')),
+    ('unpack', _('unpack')),
     ('out', _('output')),
     ('cite', _('citation')),
     ('work', _('work')),
@@ -1504,6 +1507,7 @@ INVENTORY_RULE_CHOICES = (
 BEHAVIOR_CHOICES = (
     ('work', _('Type of Work')),
     ('account', _('Virtual Account')),
+    ('container', _('Container')),
     ('other', _('Other')),
 )
 
@@ -1784,7 +1788,7 @@ class EconomicResourceType(models.Model):
         return ProcessType.objects.filter(id__in=ids)
         
     def staged_commitment_type_sequence(self):
-        #ximport pdb; pdb.set_trace()
+        #import pdb; pdb.set_trace()
         #pr changed
         staged_commitments = self.process_types.filter(stage__isnull=False)
         parent = None
@@ -1929,7 +1933,7 @@ class EconomicResourceType(models.Model):
 
     def generate_staged_work_order(self, order_name, start_date, user):
         #pr changed
-        #import pdb; pdb.set_trace()
+        import pdb; pdb.set_trace()
         pts, inheritance = self.staged_process_type_sequence()
         order = Order(
             order_type="rand",
@@ -1955,10 +1959,11 @@ class EconomicResourceType(models.Model):
                     order.name = order_name
                 ct.save()
             #import pdb; pdb.set_trace()
-            assert octs.count() == 1, 'generate_staged_work_order assumes one and only output'
-            order_item = octs[0]
-            order.due_date = last_process.end_date
-            order.save()
+            #assert octs.count() == 1, 'generate_staged_work_order assumes one and only output'
+            for oct in octs:
+                order_item = oct
+                order.due_date = last_process.end_date
+                order.save()
         #Todo: apply selected_context_agent here
         for process in processes:
             for ct in process.commitments.all():
@@ -3533,6 +3538,10 @@ class ProcessType(models.Model):
                                                                 
     def work_resource_type_relationships(self):
         return self.resource_types.filter(event_type__relationship='work')
+
+    def pack_open_and_load_resource_type_relationships(self):
+        return self.resource_types.filter(
+            Q(event_type__relationship='pack')|Q(event_type__relationship='open')|Q(event_type__name='Load'))
         
     def to_be_changed_resource_type_relationships(self):
         return self.resource_types.filter(event_type__name='To Be Changed')       
@@ -3597,6 +3606,7 @@ class ProcessType(models.Model):
         kids.extend(self.cited_resource_type_relationships())
         kids.extend(self.work_resource_type_relationships())
         kids.extend(self.features.all())
+        kids.extend(self.pack_open_and_load_resource_type_relationships())
         return kids
                                                                                                 
     def xbill_explanation(self):
@@ -3872,6 +3882,8 @@ class EconomicResource(models.Model):
     resource_type = models.ForeignKey(EconomicResourceType, 
         verbose_name=_('resource type'), related_name='resources')
     identifier = models.CharField(_('identifier'), blank=True, max_length=128)
+    container = models.ForeignKey('self', blank=True, null=True,
+        verbose_name=_('container'), related_name='contents')
     independent_demand = models.ForeignKey(Order,
         blank=True, null=True,
         related_name="dependent_resources", verbose_name=_('independent demand'))
@@ -5930,7 +5942,10 @@ class Process(models.Model):
                     if pc.stage == stage and pc.state == state:
                         if dmnd:
                             if pc.order_item == dmnd:
-                                answer.append(pc.process)
+                                if ic.event_type.relationship=='pack' and pc.event_type.name=='Unpack':
+                                    pass
+                                else:
+                                    answer.append(pc.process)
                         else:
                             if not pc.order_item:
                                 if pc.quantity >= ic.quantity:
@@ -5966,7 +5981,10 @@ class Process(models.Model):
                     if pc.stage == stage and pc.state == state:
                         if dmnd:
                             if pc.order_item == dmnd:
-                                answer.append(pc.process)
+                                if ic.event_type.relationship=='pack' and pc.event_type.name=='Unpack':
+                                    pass
+                                else:
+                                    answer.append(pc.process)
         return answer
 
     def all_previous_processes(self, ordered_processes, visited, depth):
@@ -6011,8 +6029,9 @@ class Process(models.Model):
                         if dmnd:
                             if cc.order_item == dmnd:
                                 if cc.process:
-                                    if cc.process not in answer:
-                                        answer.append(cc.process)
+                                    if cc.event_type.relationship != 'pack':
+                                        if cc.process not in answer:
+                                            answer.append(cc.process)
                         else:
                             if not cc.order_item:
                                 if cc.quantity >= oc.quantity:
@@ -6051,14 +6070,21 @@ class Process(models.Model):
                         if cc.stage == stage and cc.state == state:
                             if dmnd:
                                 if cc.order_item == dmnd:
-                                    if cc.process not in answer:
-                                        answer.append(cc.process)
+                                    #import pdb; pdb.set_trace()
+                                    if cc.event_type.relationship != 'pack':
+                                        if cc.process not in answer:
+                                            answer.append(cc.process)
         return answer
 
 
     def consumed_input_requirements(self):
         return self.commitments.filter(
             event_type__relationship='consume'
+        )
+
+    def packed_input_requirements(self):
+        return self.commitments.filter(
+            event_type__relationship='pack'
         )
 
     def used_input_requirements(self):

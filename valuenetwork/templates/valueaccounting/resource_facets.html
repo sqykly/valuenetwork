@@ -71,7 +71,7 @@
             var row = [];
 		    {% for cell in row %}
 		        {% if forloop.first %}
-			        row.push("{{ cell|safe }}");
+			        row.push('{{ cell|safe }}');
 		        {% else %}
 		            {% if cell.facet_value %}
 		                row.push("{{ cell.facet_value.value|safe }}");
