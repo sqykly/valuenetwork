@@ -1257,20 +1257,20 @@ hr {
                                     {% endif %}
                                 </span>
                                 {% if resource.quantity and logger %}
-                                    <a href="#consumeEventModal{{ resource.id }}" role="button" class="btn btn-info btn-mini" data-toggle="modal" title="Log your consumption of this resource" >
+                                    <a href="#packEventModal{{ resource.id }}" role="button" class="btn btn-info btn-mini" data-toggle="modal" title="Log your consumption of this resource" >
                                     {% trans "Log packing" %}
                                     </a>
 
-                                    <div class="modal hide fade eventModal" id="consumeEventModal{{ resource.id }}" tabindex="-1" role="dialog" aria-labelledby="event-label" aria-hidden="true">
+                                    <div class="modal hide fade eventModal" id="#packEventModal{{ resource.id }}" tabindex="-1" role="dialog" aria-labelledby="event-label" aria-hidden="true">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                             <h3 id="event-label">{% trans "Log packing of" %} {{ resource.identifier }}</h3>
                                         </div>
                                         <div class="modal-body">
                                             <form class="eventForm{{ resource.id }} validateMe" name="efr{{ resource.id }}" enctype="multipart/form-data"
-                                                action="{% url add_consumption_event commitment_id=item.id resource_id=resource.id %}" method="POST" >
+                                                action="{% url add_pack_event commitment_id=item.id resource_id=resource.id %}" method="POST" >
                                                 {% csrf_token %}
-                                                {{ resource.consumption_event_form|as_bootstrap }}
+                                                {{ resource.pack_event_form|as_bootstrap }}
                                               <div class="modal-footer">
                                                 <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
                                                 <input type="submit" class="btn btn-primary" name="submit" value='{% trans "Save" %}' />
