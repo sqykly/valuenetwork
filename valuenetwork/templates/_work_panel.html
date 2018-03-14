@@ -20,7 +20,7 @@
         <li>
             <b>{{ item.resource_type.name }}</b> &mdash; {% trans "updated" %} {{ item.changed_date }}</br>
             {% if item.process %}
-                <i>{% trans "Purpose:" %} {{ item.description }}</i>
+                <i>{% trans "Purpose:" %} {{ item.process.timeline_description }}</i>
                 <p style="margin-left: 1em; margin-bottom: 0; font-size: 90%;">
                     <a href="{% url unfold_commitment commitment_id=item.id %}">Learn more...</a>
                 </p>
