@@ -3057,7 +3057,7 @@ def create_order(request):
         item_forms.append(form)
     if request.method == "POST":
         #import pdb; pdb.set_trace()
-        if order_form.is_valid():
+        if order_form.is_valid() and (iform for iform in item_forms if iform.is_valid()):
             order = order_form.save(commit=False)
             order.created_by=request.user
             order.order_type = "customer"

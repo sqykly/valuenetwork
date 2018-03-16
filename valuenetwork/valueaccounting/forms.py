@@ -5,6 +5,7 @@ from django import forms
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.utils import simplejson
+from django.core.validators import MinValueValidator
 
 from valuenetwork.valueaccounting.models import *
 
@@ -60,7 +61,7 @@ class AgentForm(forms.Form):
     address = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'input-xxlarge',}))
     url = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'url input-xxlarge',}))
     description = forms.CharField(
-        required=False, 
+        required=False,
         widget=forms.Textarea(attrs={'class': 'input-xxlarge',}))
     agent_type = forms.ModelChoiceField(
         queryset=AgentType.objects.all(),
@@ -2710,7 +2711,11 @@ class ResourceTypeFacetValueForm(forms.Form):
 
 class OrderItemForm(forms.ModelForm):
     resource_type_id = forms.CharField(widget=forms.HiddenInput)
-    quantity = forms.DecimalField(required=False, widget=forms.TextInput(attrs={'class': 'input-small',}))
+    quantity = forms.DecimalField(
+        default="1.0",
+        widget=forms.TextInput(attrs={'class': 'input-small',}),
+        validators=[MinValueValidator(0.00001, "Can't order zero items")]
+        )
     url = forms.URLField(required=False, widget=forms.TextInput(attrs={'class': 'url',}))
     description = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'item-description',}))
 
