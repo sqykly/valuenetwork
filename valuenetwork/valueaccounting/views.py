@@ -10167,7 +10167,7 @@ def create_patterned_facet_formset(pattern, slot, data=None):
         form.fields["value"].choices = choices
     return formset
 
-
+# This function has been gutted!  General rennovations just for followability
 def exchanges(request, agent_id=None):
     #import pdb; pdb.set_trace()
     agent = None
@@ -10178,18 +10178,18 @@ def exchanges(request, agent_id=None):
     start = today - datetime.timedelta(days=365)
     init = {"start_date": start, "end_date": end}
     dt_selection_form = DateSelectionForm(initial=init, data=request.POST or None)
-    #et_donation = EventType.objects.get(name="Donation")
-    #et_cash = EventType.objects.get(name="Cash Contribution")
-    #et_pay = EventType.objects.get(name="Payment")
-    #et_receive = EventType.objects.get(name="Receipt")
-    #et_expense = EventType.objects.get(name="Expense")
+    # was: commented out et_foo of obsolete event types
     et_give = EventType.objects.get(name="Give")
     et_receive = EventType.objects.get(name="Receive")
     #references = AccountingReference.objects.all()
+    # is this really the only set of ExT worth filering over?
+    # probably could either narrow this based on the ones with types we are
+    # looking at, or different UseCase sets of types based on context agent
     ets = ExchangeType.objects.supply_exchange_types()
     event_ids = ""
     select_all = True
     selected_values = "all"
+    event_list = EventType.objects.none()
     if request.method == "POST":
         #import pdb; pdb.set_trace()
         dt_selection_form = DateSelectionForm(data=request.POST)
@@ -10203,75 +10203,70 @@ def exchanges(request, agent_id=None):
             exchanges = Exchange.objects.supply_exchanges()
         if agent_id:
             exchanges = exchanges.filter(context_agent=agent)
+        # ExchangeTypes aren't really categories, but okay
         selected_values = request.POST["categories"]
         if selected_values:
             sv = selected_values.split(",")
-            vals = []
-            for v in sv:
-                vals.append(v.strip())
+            vals = [v.strip() for v in sv]
+            exchanges_included = []
             if vals[0] == "all":
                 select_all = True
+                exchanges_included = exchanges
+
             else:
                 select_all = False
-                transfers_included = []
-                exchanges_included = []
-                events_included = []
-                for ex in exchanges:
-                    if str(ex.exchange_type.id) in vals:
-                        exchanges_included.append(ex)
-                    #the following a start at filtering by accounting ref, doesn't work
-                    #for transfer in ex.transfers.all():
-                    #    for event in transfer.events.all():
-                    #        if event.resource_type.accounting_reference:
-                    #           if event.resource_type.accounting_reference.code in vals:
-                    #                transfers_included.append(transfer)
-                    #    if transfers_included != []:
-                    #        ex.transfer_list = transfers_included
-                    #        exchanges_included.append(ex)
-                    #        transfers_included = []
-                    #for event in ex.events.all(): #work events not part of a transfer
-                    #    if event.resource_type.accounting_reference:
-                    #        if event.resource_type.accounting_reference.code in vals:
-                    #            events_included.append(event)
-                    #    if events_included != []:
-                    #        ex.event_list = events_included
-                    #        events_included = []
-                    #ex.event_list = events_included
-                exchanges = exchanges_included
+                vals = set(vals) # no dups
+                exchanges_included = Exchange.objects.none()
+
+                for extids in vals:
+                    try:
+                        ext = ExchangeType.objects.get(id=int(extids))
+                        exchanges_included = exchanges_included.union(exchanges.filter(exchange_type=ext))
+
+                    except:
+                        pass
+
+                exchanges = exchanges_included.distinct()
     else:
         if agent_id:
             exchanges = Exchange.objects.supply_exchanges(start, end).filter(context_agent=agent)
         else:
             exchanges = Exchange.objects.supply_exchanges(start, end)
 
-    #total_cash = 0
-    #total_receipts = 0
-    #total_expenses = 0
-    #total_payments = 0
+
     total_transfers = 0
     total_rec_transfers = 0
     comma = ""
     #import pdb; pdb.set_trace()
     for x in exchanges:
-        try:
-            xx = list(x.transfer_list)
-        except AttributeError:
-            x.transfer_list = list(x.transfers.all())
-        for transfer in x.transfer_list:
+        transfer_list = list(x.transfers.all())
+        # if we want more hierarchic ordering,
+        x.transfer_list = transfer_list
+        x.transfer_event_list = EconomicEvent.objects.none()
+        #try:
+        #    xx = list(x.transfer_list)
+        #except AttributeError:
+        #    x.transfer_list = list(x.transfers.all())
+        for transfer in transfer_list:
             if not transfer.transfer_type.is_reciprocal:
                 if transfer.quantity():
                     total_transfers = total_transfers + transfer.quantity()
             else:
                 if transfer.quantity():
                     total_rec_transfers = total_rec_transfers + transfer.quantity()
-            for event in transfer.events.all():
-                event_ids = event_ids + comma + str(event.id)
-                comma = ","
-        #import pdb; pdb.set_trace()
-        for event in x.events.all():
-            event_ids = event_ids + comma + str(event.id)
-            comma = ","
-        #todo: get sort to work
+            #for event in transfer.events.all():
+            events = transfer.events.all()
+            transfer.event_list = list(events)
+            event_list = event_list.union(events)
+            x.transfer_event_list = x.transfer_event_list.union(event_list)
+        # now we have a lot of possibilities for sorting
+        x.transfer_event_list = x.transfer_event_list.distinct()
+        x.own_event_list = x.events.distinct()
+        x.event_list = x.transfer_event_list.union(x.own_event_list).distinct()
+        event_list = event_list.union(x.all_event_list)
+        x.transfer_event_list = list(x.transfer_event_list)
+        x.own_event_list = list(x.own_event_list)
+        x.all_event_list = list(x.all_event_list)
 
     #import pdb; pdb.set_trace()
 
@@ -10284,7 +10279,7 @@ def exchanges(request, agent_id=None):
         "selected_values": selected_values,
         #"references": references,
         "ets": ets,
-        "event_ids": event_ids,
+        "event_ids": ','.join([str(ev.id) for ev in event_list.distinct()])#event_ids,
         "agent": agent,
     }, context_instance=RequestContext(request))
 
@@ -10441,27 +10436,34 @@ def internal_exchanges(request, agent_id=None):
                 transfers_included = []
                 exchanges_included = []
                 events_included = []
-                selected_agents = []
-                selected_categories = []
+                selected_agents = set()
+                selected_categories = set()
                 for value in vals:
+
                     if value[:1] == "A":
                         agid = int(value[1:])
-                        selected_agents.append(EconomicAgent.objects.get(id=agid))
+                        selected_agents.add(agid)
                     else:
-                        selected_categories.append(value[1:])
+                        selected_categories.add(int(value[1:]))
+
+                selected_agents = EconomicAgent.objects.filter(id__in=selected_agents)
                 if selected_categories:
-                    for ex in exchanges:
-                        if str(ex.exchange_type.id) in selected_categories:
-                            exchanges_included.append(ex)
+                    exchanges_included = exchanges.filter(event_type__id__in=selected_categories)
+                    #for ex in exchanges:
+                    #    if str(ex.exchange_type.id) in selected_categories:
+                    #        exchanges_included.append(ex)
                     exchanges = exchanges_included
-                    exchanges_included = []
+
                 #import pdb; pdb.set_trace()
                 if selected_agents:
+                    exchanges_included = []
                     for ex in exchanges:
-                        exchange_agents = ex.involves_agents()
-                        for ea in exchange_agents:
-                            if ea in selected_agents:
-                                exchanges_included.append(ex)
+                        exchange_agents = [x.id for x in ex.involves_agents()]
+                        if selected_agents.filter(id__in=exchange_agents):
+                            exchanges_included.append(ex)
+                        #for ea in exchange_agents:
+                        #    if ea in selected_agents:
+                        #        exchanges_included.append(ex)
                     exchanges = exchanges_included
 
     else:
@@ -10474,31 +10476,48 @@ def internal_exchanges(request, agent_id=None):
     total_rec_transfers = 0
     comma = ""
     #import pdb; pdb.set_trace()
+    all_ev = EconomicEvent.objects.none()
+
     for x in exchanges:
-        try:
-            xx = list(x.transfer_list)
-        except AttributeError:
-            x.transfer_list = list(x.transfers.all())
+        #try:
+        #    xx = list(x.transfer_list)
+        #except AttributeError:
+        #    x.transfer_list = list(x.transfers.all())
+        x.transfer_list = list(x.transfers.all())
+
         for transfer in x.transfer_list:
             if not transfer.transfer_type.is_reciprocal:
                 total_transfers = total_transfers + transfer.quantity()
             else:
                 total_rec_transfers = total_rec_transfers + transfer.quantity()
-            for event in transfer.events.all():
-                event_ids = event_ids + comma + str(event.id)
-                comma = ","
+            transfer.event_list = transfer.events.all()
+            all_ev = all_ev.union(transfer.event_list)
+            x.event_list = x.event_list.union(transfer.event_list)
+            transfer.event_list = list(transfer.event_list)
+            for event in transfer.event_list:
+
+                #event_ids = event_ids + comma + str(event.id)
+                #comma = ","
                 if event.from_agent not in agents:
                     agents.append(event.from_agent)
                 if event.to_agent not in agents:
                     agents.append(event.to_agent)
         #import pdb; pdb.set_trace()
-        for event in x.events.all():
-            event_ids = event_ids + comma + str(event.id)
-            comma = ","
+        x.own_event_list = x.events.all()
+        x.event_list = x.event_list.union(x.own_event_list).distinct()
+        all_ev = all_ev.union(x.own_event_list)
+        for event in x.own_event_list:
+            #event_ids = event_ids + comma + str(event.id)
+            #comma = ","
+
             if event.from_agent not in agents:
                 agents.append(event.from_agent)
             if event.to_agent not in agents:
                 agents.append(event.to_agent)
+
+        x.own_event_list = list(x.own_event_list)
+        x.event_list = list(x.event_list)
+
         #todo: get sort to work
 
 
@@ -10513,7 +10532,7 @@ def internal_exchanges(request, agent_id=None):
         "selected_values": selected_values,
         #"references": references,
         "ets": ets,
-        "event_ids": event_ids,
+        "event_ids": ','.join([ev.id for ev in all_ev]),
         "agent": agent,
         "agents": agents,
     }, context_instance=RequestContext(request))
